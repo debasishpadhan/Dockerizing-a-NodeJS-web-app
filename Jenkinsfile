@@ -31,4 +31,7 @@ node {
             } 
                 echo "Trying to Push Docker Build to DockerHub"
     }
+	stage('Email Notification') {
+		mail bcc: '', body: 'test mail setup', cc: 'dpadhan10@gmail.com', from: '', replyTo: '', subject: 'Jenkins mail setup', to: 'papunaws@gmail.com'
+	}
 }
