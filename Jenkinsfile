@@ -34,4 +34,7 @@ node {
 	stage('Email Notification') {
 		mail bcc: '', body: 'test mail setup', cc: 'dpadhan10@gmail.com', from: '', replyTo: '', subject: 'Jenkins mail setup', to: 'papunaws@gmail.com'
 	}
+	stage('Skype Notification') {
+		notifyEvents message: 'Hello <b>world</b>', token: 'bTKPWH75yUOzHXnverCAosRo2bR1NjIS'
+	}
 }
