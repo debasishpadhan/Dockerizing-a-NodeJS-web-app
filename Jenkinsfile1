@@ -1,4 +1,4 @@
-pipeline {
+node {
     def app
     environment {
         AWS_ACCOUNT_ID="787020721737"
