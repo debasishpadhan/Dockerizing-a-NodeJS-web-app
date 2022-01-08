@@ -24,8 +24,8 @@ node {
 
     stage('Pushing to ECR') { 
          script {
-                sh "docker tag nodejsapp:latest ${REPOSITORY_URI}:version${env.BUILD_NUMBER}"
-                sh "docker push ${REPOSITORY_URI}:version${env.BUILD_NUMBER}"
+                sh "docker tag nodejsapp:latest 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
+                sh "docker push 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
             }
     }
 
