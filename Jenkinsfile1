@@ -1,0 +1,39 @@
+pipeline {
+    def app
+    environment {
+        AWS_ACCOUNT_ID="787020721737"
+        AWS_DEFAULT_REGION="ap-south-1" 
+        IMAGE_REPO_NAME="nodejsapp"
+        IMAGE_TAG="latest"
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
+
+    stage('Clone repository') {
+        checkout scm
+    }
+
+    stage('Build image') {
+        app = docker.build("nodejsapp")
+    }
+
+    stage('Test image') {
+        app.inside {
+            echo "Tests passed"
+        }
+    }
+
+    stage('Pushing to ECR') { 
+         script {
+                sh "docker tag nodejsapp:latest ${REPOSITORY_URI}:version${env.BUILD_NUMBER}"
+                sh "docker push ${REPOSITORY_URI}:version${env.BUILD_NUMBER}"
+            }
+    }
+
+    stage('Email Notification') {
+        mail bcc: '', body: 'Built successfully - <b>$BUILD_ID</b>', cc: 'dpadhan10@gmail.com', from: '', replyTo: '', subject: 'Successfully Image Pushed to ECR with docker tag - version${env.BUILD_NUMBER}', to: 'papunaws@gmail.com'
+    }
+
+    stage('Skype Notification') {
+        notifyEvents message: 'Built successfully - <b>$BUILD_ID</b>', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+    }   
+}
