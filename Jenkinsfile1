@@ -24,6 +24,7 @@ node {
 
     stage('Pushing to ECR') { 
          script {
+                sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 787020721737.dkr.ecr.ap-south-1.amazonaws.com"
                 sh "docker tag nodejsapp:latest 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
                 sh "docker push 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
             }
