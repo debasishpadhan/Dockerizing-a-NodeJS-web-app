@@ -1,40 +1,47 @@
-node {
-    def app
+pipeline {
+    agent any
     environment {
-        AWS_ACCOUNT_ID="787020721737"
-        AWS_DEFAULT_REGION="ap-south-1" 
-        IMAGE_REPO_NAME="nodejsapp"
-        IMAGE_TAG="latest"
+        AWS_ACCOUNT_ID="YOUR_ACCOUNT_ID_HERE"
+        AWS_DEFAULT_REGION="CREATED_AWS_ECR_CONTAINER_REPO_REGION" 
+        IMAGE_REPO_NAME="ECR_REPO_NAME"
+        IMAGE_TAG="IMAGE_TAG"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
-
-    stage('Clone repository') {
-        checkout scm
-    }
-
-    stage('Build image') {
-        app = docker.build("nodejsapp")
-    }
-
-    stage('Test image') {
-        app.inside {
-            echo "Tests passed"
-        }
-    }
-
-    stage('Pushing to ECR') { 
-        withAWS(credentials: 'aws-cred', region: 'ap-south-1') {
-                sh "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 787020721737.dkr.ecr.ap-south-1.amazonaws.com"
-                sh "docker tag nodejsapp:latest 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
-                sh "docker push 787020721737.dkr.ecr.ap-south-1.amazonaws.com/nodejsapp:version${env.BUILD_NUMBER}"
+   
+    stages {
+        
+         stage('Logging into AWS ECR') {
+            steps {
+                script {
+                sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+                }
+                 
             }
+        }
+        
+        stage('Cloning Git') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/sd031/aws_codebuild_codedeploy_nodeJs_demo.git']]])     
+            }
+        }
+  
+    // Building Docker images
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build "${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+        }
+      }
     }
-
-    stage('Email Notification') {
-        mail bcc: '', body: 'Built successfully - <b>$BUILD_ID</b>', cc: 'dpadhan10@gmail.com', from: '', replyTo: '', subject: 'Successfully Image Pushed to ECR with docker tag - version${env.BUILD_NUMBER}', to: 'papunaws@gmail.com'
+   
+    // Uploading Docker images into AWS ECR
+    stage('Pushing to ECR') {
+     steps{  
+         script {
+                sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
+                sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+         }
+        }
+      }
     }
-
-    stage('Skype Notification') {
-        notifyEvents message: 'Built successfully - <b>$BUILD_ID</b>', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
-    }   
 }
