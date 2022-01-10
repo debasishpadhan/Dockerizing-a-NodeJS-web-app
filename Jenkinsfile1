@@ -24,8 +24,7 @@ pipeline {
                 checkout scm     
             }
         }
-  
-    // Building Docker images
+
     stage('Building image') {
       steps{
         script {
@@ -33,8 +32,7 @@ pipeline {
         }
       }
     }
-   
-    // Uploading Docker images into AWS ECR
+
     stage('Pushing to ECR') {
      steps{  
          script {
@@ -43,8 +41,13 @@ pipeline {
          }
         }
       }
-      stage('Skype Notification') {
-		notifyEvents message: '<b>$BUILD_ID</b> - Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+
+    stage('Skype Notification') {
+      steps{
+        script {
+            notifyEvents message: '<b>$BUILD_ID</b> - Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+        }
+      }
     }
   }
 }
