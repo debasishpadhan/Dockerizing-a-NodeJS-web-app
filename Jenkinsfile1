@@ -33,7 +33,7 @@ pipeline {
       }
     }
     
-    stage('Skype Notification') {
+    stage('Built confirmation notification') {
       steps{
         script {
             notifyEvents message: 'ECR pipeline | <b>$BUILD_ID</b> - Built is waiting for confirmation', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
