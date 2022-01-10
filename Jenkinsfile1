@@ -46,4 +46,5 @@ pipeline {
       stage('Skype Notification') {
 		notifyEvents message: '<b>$BUILD_ID</b> - Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
     }
+  }
 }
