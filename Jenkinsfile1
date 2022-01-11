@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { node { label 'agent2' } }
     environment {
         AWS_ACCOUNT_ID="787020721737"
         AWS_DEFAULT_REGION="ap-south-1" 
