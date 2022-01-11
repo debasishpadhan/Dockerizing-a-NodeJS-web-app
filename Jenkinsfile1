@@ -31,31 +31,11 @@ pipeline {
             }
         }
 
-        stage('Built confirmation notification') {
+        stage('Built approve notification') {
             steps{
                 script {
-                    def userAborted = false
                     notifyEvents message: "Please go to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
-      
-                    echo "Building1"
-                    try { 
-                        userInput = input submitter: 'vagrant', message: 'Do you approve?'
-                    }
-
-                    catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
-                        cause = e.causes.get(0)
-                        echo "Aborted by " + cause.getUser().toString()
-                        userAborted = true
-                        echo "SYSTEM aborted, but looks like timeout period didn't complete. Aborting."
-                    }
-
-                    if (userAborted) {
-                        currentBuild.result = 'ABORTED'
-                    }
-
-                    else {
-                        echo "Building2"
-                    }
+                    userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
                 }
             }
         }
@@ -72,7 +52,7 @@ pipeline {
         stage('Skype Notification') {
             steps{
                 script {
-                    notifyEvents message: 'ECR pipeline | <b>$BUILD_ID</b> - Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    notifyEvents message: '$BUILD_TAG | Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
                 }
             }
         }
