@@ -54,6 +54,7 @@ pipeline {
         stage('Skype Notification') {
             steps{
                 script {
+                    sh "echo Notification Sent"
                     //notifyEvents message: '$BUILD_TAG | Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
                 }
             }
