@@ -37,6 +37,7 @@ pipeline {
                 script {
                     notifyEvents message: "Please go to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
                     userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
+                    env.node_name = input id: 'Agent', message: 'Deploy to which production machine?', submitter: 'admin', parameters: [choice(choices: ['agent1', 'agent2'], description: 'Which production machine?', name: 'agentSelect')]
                 }
             }
         }
@@ -59,7 +60,7 @@ pipeline {
         }
 
         stage('Deploy to Machine') {
-            agent { node { label 'agent1' } }
+            agent { label "${env.node_name}" }
             steps {
                 script {
                     sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
