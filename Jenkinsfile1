@@ -35,7 +35,7 @@ pipeline {
             options { timeout(time: 2, unit: 'MINUTES') }
             steps{
                 script {
-                    notifyEvents message: "Please go to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    //notifyEvents message: "Please go to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
                     userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
                     env.node_name = input id: 'Agent', message: 'Deploy to which production machine?', submitter: 'admin', parameters: [choice(choices: ['agent1', 'agent2'], description: 'Which production machine?', name: 'agentSelect')]
                 }
@@ -54,7 +54,7 @@ pipeline {
         stage('Skype Notification') {
             steps{
                 script {
-                    notifyEvents message: '$BUILD_TAG | Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    //notifyEvents message: '$BUILD_TAG | Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
                 }
             }
         }
