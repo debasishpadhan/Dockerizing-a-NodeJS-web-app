@@ -1,10 +1,10 @@
 pipeline {
     agent { node { label 'agent1' } }
     environment {
-        AWS_ACCOUNT_ID=(credentialsId: 'aws-cred')
-        AWS_DEFAULT_REGION="ap-south-1" 
-        IMAGE_REPO_NAME="nodejsapp"
-        IMAGE_TAG="latest"
+        AWS_ACCOUNT_ID = credentials('aws-cred')
+        AWS_DEFAULT_REGION = "ap-south-1" 
+        IMAGE_REPO_NAME = "nodejsapp"
+        IMAGE_TAG = "latest"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
    
