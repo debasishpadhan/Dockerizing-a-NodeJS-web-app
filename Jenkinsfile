@@ -1,7 +1,7 @@
 pipeline {
     agent { node { label 'agent1' } }
     environment {
-        AWS_ACCOUNT_ID = credentials('aws-id-test')
+        AWS_ACCOUNT_ID = credentials('aws-account-id')
         AWS_DEFAULT_REGION = "ap-south-1" 
         IMAGE_REPO_NAME = "nodejsapp"
         IMAGE_TAG = "latest"
