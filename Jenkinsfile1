@@ -35,8 +35,8 @@ pipeline {
             options { timeout(time: 2, unit: 'MINUTES') }
             steps{
                 script {
-                    notifyEvents message: "Please go to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
-                    userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
+                    notifyEvents message: "Please <a href="${BUILD_URL}input">click here</a> to console output of ${BUILD_URL}input to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    //userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
                     env.node_name = input id: 'Agent', message: 'Deploy to which production machine?', submitter: 'admin', parameters: [choice(choices: ['agent1', 'agent2'], description: 'Which production machine?', name: 'agentSelect')]
                 }
             }
