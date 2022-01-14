@@ -6,6 +6,7 @@ pipeline {
         IMAGE_REPO_NAME = "nodejsapp"
         IMAGE_TAG = "latest"
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+        NOTIFY_EVENT_TOKEN = credentials('notify-token')
     }
    
     stages {
@@ -35,7 +36,7 @@ pipeline {
             options { timeout(time: 2, unit: 'MINUTES') }
             steps{
                 script {
-                    notifyEvents message: "Please <a href='${BUILD_URL}input'>click here</a> to go to console output of buildID ${BUILD_ID} to approve or Reject.", token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    notifyEvents message: "Please <a href='${BUILD_URL}input'>click here</a> to go to console output of buildID ${BUILD_ID} to approve or Reject.", token: "$NOTIFY_EVENT_TOKEN"
                     //userInput = input submitter: '', message: "Do you approve the Build-${BUILD_TAG} ?"
                     env.node_name = input id: 'Agent', message: "Do you approve the Build-${BUILD_TAG} ?", submitter: 'admin', parameters: [choice(choices: ['agent1', 'agent2'], description: 'Which production machine?', name: 'agentSelect')]
                 }
@@ -55,7 +56,7 @@ pipeline {
             steps{
                 script {
                     //sh "echo Notification Sent"
-                    notifyEvents message: '$BUILD_TAG | Built successfully', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    notifyEvents message: '$BUILD_TAG | Built successfully', token: "$NOTIFY_EVENT_TOKEN"
                 }
             }
         }
@@ -76,7 +77,7 @@ pipeline {
         stage('Container Notification') {
             steps{
                 script {
-                    notifyEvents message: 'Conrainer is up and running', token: '9kwgMyapizr8whRRqJPYS87AOZ7U5EUk'
+                    notifyEvents message: 'Conrainer is up and running', token: "$NOTIFY_EVENT_TOKEN"
                 }
             }
         }
